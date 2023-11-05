@@ -1,0 +1,194 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/orsinobbb/github-colab/blob/main/Convert_PDF_to_image\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "OKm8mUozoRjb"
+      },
+      "source": [
+        "First, we'll install deps for pdf2image."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "QDVm2QUrnJaF",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "c97a4403-5955-44cc-f507-323a119df327"
+      },
+      "source": [
+        "!apt-get install poppler-utils"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Reading package lists... Done\n",
+            "Building dependency tree... Done\n",
+            "Reading state information... Done\n",
+            "The following NEW packages will be installed:\n",
+            "  poppler-utils\n",
+            "0 upgraded, 1 newly installed, 0 to remove and 19 not upgraded.\n",
+            "Need to get 186 kB of archives.\n",
+            "After this operation, 696 kB of additional disk space will be used.\n",
+            "Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 poppler-utils amd64 22.02.0-2ubuntu0.2 [186 kB]\n",
+            "Fetched 186 kB in 1s (344 kB/s)\n",
+            "Selecting previously unselected package poppler-utils.\n",
+            "(Reading database ... 120874 files and directories currently installed.)\n",
+            "Preparing to unpack .../poppler-utils_22.02.0-2ubuntu0.2_amd64.deb ...\n",
+            "Unpacking poppler-utils (22.02.0-2ubuntu0.2) ...\n",
+            "Setting up poppler-utils (22.02.0-2ubuntu0.2) ...\n",
+            "Processing triggers for man-db (2.10.2-1) ...\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6zqhuaimoUNV"
+      },
+      "source": [
+        "Next, install `pdf2image` itself."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "TtkG0J2Emfgl",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "451b1f57-d3bc-437c-f325-74b799e1a754"
+      },
+      "source": [
+        "!pip install pdf2image"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting pdf2image\n",
+            "  Downloading pdf2image-1.16.3-py3-none-any.whl (11 kB)\n",
+            "Requirement already satisfied: pillow in /usr/local/lib/python3.10/dist-packages (from pdf2image) (9.4.0)\n",
+            "Installing collected packages: pdf2image\n",
+            "Successfully installed pdf2image-1.16.3\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "orpgQZ75oLUt"
+      },
+      "source": [
+        "Download an example PDF file to be converted & displayed below."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "BJveyArHm6eD",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 204
+        },
+        "outputId": "eeadd23a-56e8-4c0c-e9dc-bcd6f655909c"
+      },
+      "source": [
+        "!wget https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "--2019-12-28 17:44:10--  https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf\n",
+            "Resolving www.w3.org (www.w3.org)... 128.30.52.100\n",
+            "Connecting to www.w3.org (www.w3.org)|128.30.52.100|:443... connected.\n",
+            "HTTP request sent, awaiting response... 200 OK\n",
+            "Length: 13264 (13K) [application/pdf]\n",
+            "Saving to: ‘dummy.pdf’\n",
+            "\n",
+            "\rdummy.pdf             0%[                    ]       0  --.-KB/s               \rdummy.pdf           100%[===================>]  12.95K  --.-KB/s    in 0s      \n",
+            "\n",
+            "2019-12-28 17:44:11 (374 MB/s) - ‘dummy.pdf’ saved [13264/13264]\n",
+            "\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "m3sL4JRmoN_Y"
+      },
+      "source": [
+        "Convert and display the example PDF file downloaded above."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_rGYtmcxmx4v",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 817
+        },
+        "outputId": "304cdc3c-809c-409d-f326-a7a2da88d032"
+      },
+      "source": [
+        "from pdf2image import convert_from_path, convert_from_bytes\n",
+        "from IPython.display import display, Image\n",
+        "\n",
+        "images = convert_from_bytes(open('dummy.pdf', 'rb').read(), size=800)\n",
+        "display(images[0])"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAjYAAAMgCAIAAAC/LL9QAAAT+UlEQVR4nO3cWYhX9cPH8TM2aOJM\n86uZ1NILU0uRNFsp26TtH0JFFmGZlqitkBEUWVEaQWAU7RqUhCjSBlmNVHaReCHtpbbYSKJgmltN\nKjPNjM5z8eMZ/JuZT7h8puf1uprzO98z3+85c/HmnPNjKtrb2wsAyNPlcC8AAPZOogAIJVEAhJIo\nAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAgl\nUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQ\nSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkC\nIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFAS\nBUAoiQIglEQBEEqiAAglUf8G7e3t69at27Jly+FeCMCB1AkS9eOPP1b9r+rq6rq6umHDhk2bNq25\nuflwL21fJk2a1LHmmpqa3r17X3DBBYsWLSrvvfnmmztOqqampm/fvldeeeXSpUs7Dp83b17V3vz0\n0097TPTjjz+edNJJffv2raure+aZZwYMGFBVVfXVV191zPLss88esrMGOIA6QaJ27dq1Y8eOHTt2\n9OjRo3v37tu3b1++fPn06dMvv/zytra2w726v9Tc3Lxjx4729vYePXpUVlZu3LhxyZIlo0aN+uyz\nz3bfW1VV1aVLl3Xr1r377rsXXnjhwoULy4e3trbu2LGjubl5j0R16bLnn+yFF15YtWrV4MGDH3zw\nwZEjR5av1c6dOztmaWlpOcTnDnBAdIJEdVi5cuXGjRubmprq6+t79OixePHil156af8Pb29v37x5\nc0fVWlpatm7duteRTU1NjY2NHZtbt279448//tmaJ0yYsGHDhi1btqxdu/bEE09sa2ubNWtWx97J\nkydv2LDh119/3bRp0+jRo1tbWydPnrx7UQYOHLjhv/Xr12+PKTZt2lQUxaRJkx577LFTTjllw4YN\n7e3tZ5xxxl7Xs2vXrk2bNokW0Cl0pkSVVVRUjBo16vbbby+KYt68eeUP+/btWyqVGhoaypsjRowo\nlUqLFy8uiuL8888vlUpz5swZOHDgscce26tXr3feeWfGjBm1tbW1tbVDhw5dtWpVURT19fWlUmni\nxImTJ0+uqakplUpXXHHFt99+O2LEiNra2pqammnTphVF8cUXX5RKpeOPP76pqak819SpU0ul0n33\n3bfvZfft2/eiiy4qimLdunV/3ltXV/fyyy937dr1559//vjjj/f/aowYMeLNN98siuKhhx4qlUo7\nd+4cNGhQqVT6+uuv/zz4lVdeOe6443r27FldXT1u3Lht27bt/0QAh17nS1TZiBEjiqJYtmxZefO3\n335rbGwsP90qiuL3339vbGxsbW0timLbtm2NjY2TJ0++7LLLRo4cuXXr1muuueaJJ5645ZZbBg8e\nvGLFivvvv78oitbW1sbGxldfffXzzz+/8847q6qq3nvvveHDhx999NETJ05saWmZPn368uXLTz/9\n9N69e69fv77jidz8+fMbGxuvvvrqfax2586dn3zyyYIFC4qiGDBgwF7HHH300YMHD979pIqi2Lx5\n87TdfP7553scNWzYsNra2qIo+vXrd/bZZ1dUVDQ2NjY2Nv75Eehbb701adKk5ubmKVOmnH322XPn\nzh03btx+XGmAw6bycC/gHzrqqKOKoii/dDniiCP+dvw999zz+OOPb9q0qWfPnm1tbS+//PJVV111\n3nnnjR49+vvvv+8Y1r17948++qi2tralpeXFF188+eST6+vri6L47LPPli1b9sMPPwwdOnTChAn3\n33//66+/fs0113z66adr1qwZMGDAOeecs9d5X3zxxVmzZnW0s6qq6q677tr3Se3+jHHLli3Tp0/v\n2Ozdu/ceT/BmzZr122+/vfbaa7feeuvdd9+9jyswY8aM8nrGjh3b2tp64oknLliwYPXq1SeccMI+\njgI4jDprorZv314URbdu3fanT0VRnHnmmUVRlEql8ubw4cOLoqirqyuKYvf3TP379y/flJRHloft\nMXL8+PEPPvhgfX19U1NT+SHbPm5HqqqqjjnmmMrKyurq6iFDhkydOnXQoEH7PqkePXp0fHL88cc/\n+eSTe5zFP1N+9Ddnzpx3332341y+/PJLiQJiddZEffPNN0VRDB06dPcPd+3aVf7hz99u6Nq1a1EU\nFRUV5c1u3brtvrnHsI5d5WF7jDzuuOP+85//LFy4sL6+vpyoG2+88a/WOX78+Oeff35/zqi5uXnl\nypV7nFR1dfWYMWP25/C/VVlZ2dLS0q1bt8rKyqIoLr744qIoevbseUB+OcDB0CnfRS1btmzmzJlF\nUdxwww3lT4488siiKDZv3lwUxfbt23/++eeDuoAJEyYURfHII4+sXr363HPP/avXS/uvpaXlgQce\naGpq6tmz5yWXXHIg1rin8ouu8ePHz507d+7cueecc86YMWNOO+20gzEXwAHRme6izjrrrC5dujQ3\nN69du7a9vX348OG33XZbedeQIUOWLFly5513jh079u233y5/UeLgufLKK2tra7/77rtin0/5/tac\nOXPef//99vb2X375pfwK6umnn+64dTuw7rrrrptvvvmOO+5YtWpVQ0PD7Nmz+/Tp0/EdSIBAneku\nqqGhYeXKlevXr+/fv/+99967ePHi7t27l3c99dRTffr0WbFixcMPP3zxxRdfccUVB3UlXbt2Ld/A\ndevW7brrrvvHv+fXX39duXJlQ0NDRUXFpZde+uGHH15//fUHbpn/5aabbnr00UebmpqmTp06e/bs\nU0899YMPPui4gACBKtrb2w/3Gg6Mtra2NWvW1NXV1dTUHILpJk6cOHv27GuvvfaNN944BNMdKC0t\nLWvXrq2uru7Vq9fhXgvA3/j3JOqQee655xoaGmbOnNnW1rZo0aKD9OoIgM70LirE/Pnzly5d2qVL\nlylTpugTwMHjLur/7Jdfflm/fn35P4sf7rUA/JtJFAChOtM3+gD4f0WiAAglUQCEkigAQkkUAKEk\nCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABC\nSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEA\nhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqi\nAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCU\nRAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVA\nKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQK\ngFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJ\nFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCE\nkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIA\nCCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJRE\nARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAo\niQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqA\nUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkU\nAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISS\nKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAI\nJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQB\nEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJ\nAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQ\nEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQA\noSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIo\nAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAgl\nUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQ\nSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkC\nIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFAS\nBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFACh\nJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigA\nQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVR\nAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBK\nogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIg\nlEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIF\nQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEk\nCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABC\nSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEA\nhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqi\nAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCU\nRAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVA\nKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQK\ngFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJ\nFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCE\nkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIA\nCCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJRE\nARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAo\niQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqA\nUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkU\nAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISS\nKABCSRQAoSQKgFASBUAoiQIglEQBEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAI\nJVEAhJIoAEJJFAChJAqAUBIFQCiJAiCURAEQSqIACCVRAISSKABCSRQAoSQKgFASBUAoiQIglEQB\nEEqiAAglUQCEkigAQkkUAKEkCoBQEgVAKIkCIJREARBKogAIJVEAhJIoAEJJFAChJAqAUBIFQCiJ\nAiCURAEQSqIACCVRAISSKABC/Q8pnxPqTuY+TwAAAABJRU5ErkJggg==\n",
+            "text/plain": [
+              "<PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=566x800 at 0x7FB6471CF898>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    }
+  ]
+}
